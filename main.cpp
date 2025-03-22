@@ -82,6 +82,34 @@ int main() {
     saida[j] = '\0'; 
     printf("Expressão Pós-Fixa: %s\n", saida);
 
+     
+    //declaração do vetor de valores numericos
+    int valores[26]= {0};
+    //vetor usado para checar se o usuario preencheu as variaveis
+    bool valores_preenchidos[26]= {false};
+    
+    for (int i=0;saida[i]!='\0'; i++ ){
+        char c= saida[i];
+        if (c >= 'A' && c <= 'Z'){
+            //solitita o valor apenas uma vez, evitando assim repetiçao 
+            if (!valores_preenchidos[c-'A']){
+                printf("digite um valor para cada variável por favor %c:",c);
+                scanf("%d", &valores[c- 'A']);
+                //verifica se os valores foram devidamente preenchidos
+                valores_preenchidos[c-'A']= true;
+                
+            }
+        }    
+        
+    }
+    printf("os valores fornecidoos foram respectivamente:\n");
+    for (int i= 0; i<26; i++){
+    //verifica se o usuario forneceu valores
+    if (valores_preenchidos[i]){
+        printf("%c:%d\n", 'A'+i, valores[i]);
+    }
+    
+    }
     // Liberar memória
     free(texto);
     free(saida);
