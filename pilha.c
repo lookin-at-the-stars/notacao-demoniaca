@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "pilha.hpp"
+#include "pilha.h"
 
 Stack* CriaStack(int tamanho) {
     Stack *aux; /* começo com um ponteiro, que será o retorno */
