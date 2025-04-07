@@ -6,10 +6,10 @@
 bool estaNoConjuntoChar(char conjunto[], int tamanho, char elemento) {
     for (int i = 0; i < tamanho; i++) {
         if (conjunto[i] == elemento) {
-            return true; // Elemento encontrado
+            return true;
         }
     }
-    return false; // Elemento não encontrado
+    return false;
 }
 
 // Função para obter a prioridade do operador
@@ -18,8 +18,43 @@ int prioridade(char operador) {
         case '+': case '-': return 1;
         case '*': case '/': return 2;
         case '^': return 3;
-        default: return 0; // Parênteses ou caracteres inválidos
+        default: return 0;
     }
+}
+
+// Função para avaliar a expressão pós-fixa
+int avaliarExpressaoPosfixa(char *posfixa, int valores[]) {
+    Stack *pilha = CriaStack(50);
+
+    for (int i = 0; posfixa[i] != '\0'; i++) {
+        char c = posfixa[i];
+
+        if (c >= 'A' && c <= 'Z') {
+            push(pilha, valores[c - 'A']);
+        } else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
+            int b = pop(pilha);
+            int a = pop(pilha);
+            int resultado;
+
+            switch (c) {
+                case '+': resultado = a + b; break;
+                case '-': resultado = a - b; break;
+                case '*': resultado = a * b; break;
+                case '/': resultado = (b != 0) ? a / b : 0; break;
+                case '^': {
+                    resultado = 1;
+                    for (int j = 0; j < b; j++) resultado *= a;
+                    break;
+                }
+            }
+
+            push(pilha, resultado);
+        }
+    }
+
+    int resultadoFinal = pop(pilha);
+    DestroiStack(pilha);
+    return resultadoFinal;
 }
 
 int main() {
@@ -41,7 +76,7 @@ int main() {
         scanf("%d", &opcao);
 
         switch (opcao) {
-            case 1: // Entrada da expressão aritmética na notação infixa
+            case 1:
                 if (texto) free(texto);
                 texto = (char *)malloc(100 * sizeof(char));
                 if (!texto) {
@@ -53,7 +88,7 @@ int main() {
                 printf("Expressão digitada: %s\n", texto);
                 break;
 
-            case 2: // Entrada dos valores numéricos associados às variáveis
+            case 2:
                 if (!texto) {
                     printf("Por favor, insira uma expressão infixa primeiro (opção 1).\n");
                     break;
@@ -71,7 +106,7 @@ int main() {
                 printf("Valores associados às variáveis foram armazenados.\n");
                 break;
 
-            case 3: // Conversão da expressão para notação pós-fixa
+            case 3:
                 if (!texto) {
                     printf("Por favor, insira uma expressão infixa primeiro (opção 1).\n");
                     break;
@@ -119,11 +154,17 @@ int main() {
                 printf("Expressão Pós-Fixa: %s\n", saida);
                 break;
 
-            case 4: // Avaliação da expressão (a ser implementada)
-                printf("Avaliação da expressão ainda não implementada.\n");
+            case 4:
+                if (!saida) {
+                    printf("Por favor, converta a expressão para pós-fixa primeiro (opção 3).\n");
+                    break;
+                }
+                int resultado;
+                resultado = avaliarExpressaoPosfixa(saida, valores);
+                printf("Resultado da avaliação da expressão: %d\n", resultado);
                 break;
 
-            case 5: // Encerramento do programa
+            case 5:
                 printf("Encerrando o programa...\n");
                 break;
 
@@ -132,7 +173,6 @@ int main() {
         }
     } while (opcao != 5);
 
-    // Liberar memória
     if (texto) free(texto);
     if (saida) free(saida);
     if (pilhaop) DestroiStackChar(pilhaop);
